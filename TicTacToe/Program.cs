@@ -9,22 +9,43 @@ using System.IO;
 
 namespace TicTacToe
 {
-    
+    /// <summary>
+    /// <c> Класс Program содержит массив с номерами полей для игры, глобальные переменные, методы для игры и проверки победителя</c>  
+    /// </summary>
     class Program
     {
-        //making array and 
-        //by default I am providing 0-9 where no use of zero
+        /// <summary>
+        /// <remark> making array and by default I am providing 0-9 where no use of zero</remark>
+        /// </summary>
+        
         static char[] arr = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-        static int player = 1; 
-        static bool passage = true; // By default Person1 starts to play 
-        static int choice; //This holds the choice at which position user want to mark 
+        /// <summary>
+        /// <remark> Counter, which control who next turn</remark>
+        /// </summary>
+        static int player = 1;
+        /// <summary>
+        /// <remark>By default Person1 starts to play</remark>
+        /// </summary>
+        static bool passage = true;
+        /// <summary>
+        /// <remark>This holds the choice at which position user want to mark</remark>
+        /// </summary>
+        static int choice;
+        /// <summary>
+        /// <remark>Variable which hold to select whether to continue the game or exit</remark>
+        /// </summary>
         static int circle = 1;
-        static int choiceOpponent = 0; // This holds the choice at with whom user want to play 
-                                       // The flag veriable checks who has won if it's value is 1 then some one has won the match 
-                                       //if -1 then Match has Draw if 0 then match is still running
-
+        /// <summary>
+        /// <remark>This holds the choice at with whom user want to play</remark>
+        /// </summary>
+        static int choiceOpponent = 0;
+        /// <summary>
+        /// <remark>The flag veriable checks who has won if it's value is 1 then some one has won the match if -1 then Match has Draw if 0 then match is still running</remark>
+        /// </summary>
         static int flag = 0;
-
+        /// <summary>
+        /// <c> Start of the game</c>  
+        /// </summary>
         static void Main(string[] args)
         {
             FileStream fs = null;
@@ -34,17 +55,16 @@ namespace TicTacToe
             Console.WriteLine("Hello! This is TicTacToe game!");
             Console.WriteLine();
             Console.WriteLine("At first please enter your name:");
-            string playerName = Console.ReadLine();
-            string opponentName = null;
+            string playerName = Console.ReadLine();  // Name of user which want to play
+            string opponentName = null;             // Name of user's opponent before user makes a choice by default null
 
             
             do
             {
                 Person person1 = new Person(playerName);          // create Player
-
-                player = 1;
+                player = 1;                                        //if it is not first game, the player by default = 1
                 
-                Person person2 = null;
+                Person person2 = null;                      //Creation of objects of three variants of players
                 Combat combat = null;
                 Scout scout = null;
 
@@ -54,7 +74,7 @@ namespace TicTacToe
                     if(File.Exists("Statistic.txt") == false)
                         Console.WriteLine("Choose opponent:\n1 - Another person\n2 - Computer - combat\n3 - Computer - scout");
                     else
-                        Console.WriteLine("Choose opponent:\n1 - Another person\n2 - Computer - combat\n3 - Computer scout\n4 - Print results");
+                        Console.WriteLine("Choose opponent:\n1 - Another user\n2 - Computer - combat\n3 - Computer scout\n4 - Print results");
                     try
                     {
                         choiceOpponent = int.Parse(Console.ReadLine());
@@ -64,27 +84,27 @@ namespace TicTacToe
                             Console.WriteLine("Enter person name:");
                             opponentName = Console.ReadLine();
 
-                            person2 = new Person(opponentName);  // if person wants to play with another person create another Player
+                            person2 = new Person(opponentName);  // if user wants to play with another person create another Player
                         }
                         else if (choiceOpponent == 2)
                         {
                             opponentName = "Combat";
-                            combat = new Combat(opponentName);  // if person wants to play with Computer combat create Combat
+                            combat = new Combat(opponentName);  // if user wants to play with Computer combat create Combat
                         }
                         else if (choiceOpponent == 3)
                         {
                             opponentName = "Scout";
-                            scout = new Scout(opponentName);    // if person wants to play with Computer scout create Scout
+                            scout = new Scout(opponentName);    // if user wants to play with Computer scout create Scout
                         }
                         else if (choiceOpponent == 4)
-                            Console.WriteLine(File.ReadAllText("Statistic.txt"));
+                            Console.WriteLine(File.ReadAllText("Statistic.txt")); // if user want to see statistic of his games
                         else
                         {
-                            Console.WriteLine("You entered an invalid value, try again");
+                            Console.WriteLine("You entered an invalid value, try again"); // checking if user entered wrong number
                             choiceOpponent = 0;
                         }
                     }
-                    catch (Exception)
+                    catch (Exception)                                   // checking if user entered char instead number
                     {
                         if (File.Exists("Statistic.txt") == true)
                             Console.WriteLine("Enter number from 1 or 4");
@@ -96,14 +116,14 @@ namespace TicTacToe
                 try
                 {
                     if (File.Exists("Statistic.txt") == true)
-                        fs = new FileStream("Statistic.txt", FileMode.Append, FileAccess.Write);
+                        fs = new FileStream("Statistic.txt", FileMode.Append, FileAccess.Write); // if file with statistic is exists open file to add data
                     else
-                        fs = new FileStream("Statistic.txt", FileMode.Create, FileAccess.ReadWrite);
+                        fs = new FileStream("Statistic.txt", FileMode.Create, FileAccess.ReadWrite);// if file with statistic isn't exists create file to add data
                     byte[] buf = new byte[20];
                     if (choiceOpponent == 1)
                     {
-                        Game(person1, person2);
-                        ResultWin(person1, person2);
+                        Game(person1, person2);                 //Game between two users
+                        ResultWin(person1, person2);            //Checking result
                         if (flag == 1)                          // if flag value is 1 then some one has win or means who played marked last time which has win
                         {
                             if (((player % 2) + 1) == 1)
@@ -142,10 +162,10 @@ namespace TicTacToe
                             fs.Write(buf, 0, buf.Length);
                         }
                     }
-                    if (choiceOpponent == 2)
+                    if (choiceOpponent == 2) 
                     {
-                        Game(person1, combat);
-                        ResultWin(person1, combat);
+                        Game(person1, combat);                  //Game between user and Computer Combat
+                        ResultWin(person1, combat);             //Cheking result
                         if (flag == 1)                          // if flag value is 1 then some one has win or means who played marked last time which has win
                         {
                             if (((player % 2) + 1) == 1)
@@ -186,8 +206,8 @@ namespace TicTacToe
                     }
                     if (choiceOpponent == 3)
                     {
-                        Game(person1, scout);
-                        ResultWin(person1, scout);
+                        Game(person1, scout);                   //Game between user and Computer scout
+                        ResultWin(person1, scout);              //Checking result
                         if (flag == 1)                          // if flag value is 1 then some one has win or means who played marked last time which has win
                         {
                             if (((player % 2) + 1) == 1)
@@ -235,24 +255,26 @@ namespace TicTacToe
                 {
                     if (fs != null)
                     {
-                        fs.Close();
+                        fs.Close();             //closing FileStream and make memory free
                     }
                 }
                 Console.WriteLine("Do you want to play again? 1 -yes/ 2 - no");
                 do
                 {
                     circle = ChekAnsw();
-                } while (circle != 1 && circle != 2);
+                } while (circle != 1 && circle != 2); // Choosing want to continue play or exit
 
                 ResetField();
             } while (circle == 1);
 
-            File.Delete("Statistic.txt");
+            File.Delete("Statistic.txt");           //Delete statistic file after exit
             Console.Clear();
             Console.WriteLine("Good bye!");
 
         }
-
+        /// <summary>
+        /// <remark>Method of Reset Field for new game</remark>
+        /// </summary>
         public static void ResetField()
         {
             for (var i = 1; i < arr.Length; i++)
@@ -260,6 +282,9 @@ namespace TicTacToe
                 arr[i] = char.Parse(i.ToString());
             }
         }
+        /// <summary>
+        /// <remark>Checking correct entering number for continue or stop this game</remark>
+        /// </summary>
         private static int ChekAnsw()
         {
             try
@@ -275,8 +300,10 @@ namespace TicTacToe
             }
             return circle;
         }
-
-        private static void Board()                             // Visualization the board on console and filling by numbers for runs
+        /// <summary>
+        /// <remark>Method which painting the game's board</remark>
+        /// </summary>
+        private static void Board()                             
         {
             Console.WriteLine("     |     |      ");
             Console.WriteLine("  {0}  |  {1}  |  {2}", arr[1], arr[2], arr[3]);
@@ -288,15 +315,19 @@ namespace TicTacToe
             Console.WriteLine("  {0}  |  {1}  |  {2}", arr[7], arr[8], arr[9]);
             Console.WriteLine("     |     |      ");
         }
-
-        private static void Game(Player one, Player two)  // Method for interaction of players
+        /// <summary>
+        /// <remark>Method for interaction of players</remark>
+        /// </summary>
+        /// <param name="one"></param>
+        /// <param name="two"></param>
+        private static void Game(Player one, Player two)
         {
             do
             {
                 Console.Clear();
                 Console.WriteLine("{0}: X and {1}: O", one.GetName(), two.GetName());
                 Console.WriteLine("\n");
-                Board();// calling the board Function
+                Board();                                                                      // calling the board Function
                 if (player % 2 == 1)                                                         //checking the chance of the player
                 {
                     Console.Write("{0} Chance: ", one.GetName());
@@ -323,7 +354,11 @@ namespace TicTacToe
 
             
         }
-
+        /// <summary>
+        /// <remark>Show to console who won</remark>
+        /// </summary>
+        /// <param name="one"></param>
+        /// <param name="two"></param>
         private static void ResultWin(Player one, Player two)
         {
             
@@ -342,7 +377,7 @@ namespace TicTacToe
                 }
 
             }
-            else// if flag value is -1 the match will be draw and no one is winner
+            else                                     // if flag value is -1 the match will be draw and no one is winner
             {
                 Console.WriteLine("Draw");
                 one.GetDraw();
@@ -352,7 +387,11 @@ namespace TicTacToe
             Console.ReadLine();
         }
 
-        private static int CheckWin()                           //Checking that any player has won or not
+        /// <summary>
+        /// <remark>Winner determination method</remark>
+        /// </summary>
+        /// <returns></returns>
+        private static int CheckWin()                 //Checking that any player has won or not
         {
             
             //Winning Condition For First Row   
@@ -411,12 +450,6 @@ namespace TicTacToe
                 return 0;
             }
         }
-        static void Print(ICollection ic)
-        {
-            
-            foreach (var i in ic)
-                Console.Write("{0} ", i);
-            Console.WriteLine();
-        }
+        
     }
 }

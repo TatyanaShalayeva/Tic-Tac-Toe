@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace TicTacToe
 {
+    /// <summary>
+    /// <remark>Class for Computer combat</remark>
+    /// </summary>
     class Combat : Player
     {
         public string Name;
@@ -18,22 +21,42 @@ namespace TicTacToe
             this.draw = 0;
         }
 
+        /// <summary>
+        /// <remark>Method to get name of user</remark>
+        /// </summary>
+        /// <returns></returns>
         public string GetName()
         {
             return this.Name;
         }
 
+        /// <summary>
+        /// <remark>Method to sum win's points</remark>
+        /// </summary>
+        /// <returns></returns>
         public int GetWin()
         {
             return this.win += 1;
         }
 
+        /// <summary>
+        /// <remark>Method to sum draw's points</remark>
+        /// </summary>
+        /// <returns></returns>
         public int GetDraw()
         {
             return this.draw += 1;
         }
 
         Random rand = new Random();
+
+        /// <summary>
+        /// <remark>Method for choosing next turn by Computer Combat</remark>
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <param name="player"></param>
+        /// <param name="passage"></param>
+        /// <returns></returns>
         public int Selection(char[] arr, int player, ref bool passage)
         {
             //int marker = 0;
@@ -520,9 +543,6 @@ namespace TicTacToe
             Console.Beep();
             return muve;
         }
-        public void PrintClass()
-        {
-            Console.WriteLine("Name: {0}\t win: {1}\t draw: {2}", this.Name, this.win, this.draw);
-        }
+        
     }
 }
