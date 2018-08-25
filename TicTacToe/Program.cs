@@ -450,6 +450,11 @@ namespace TicTacToe
                 return 0;
             }
         }
+
+        private static void SMS()
+        {
+            Console.WriteLine("Method for play with github");
+        }
         
     }
 }
